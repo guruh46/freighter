@@ -127,8 +127,10 @@ const uploadMetrics = throttle(async () => {
 const getUserId = () => {
   const storedId = localStorage.getItem("metrics_user_id");
   if (!storedId) {
-    // Create a random ID by taking the decimal portion of a random number
-    const newId = Math.random().toString().split(".")[1];
+    // Create a cryptographically secure random ID using window.crypto
+    const array = new Uint32Array(2); // 64 bits = 2 * 32 bits
+    window.crypto.getRandomValues(array);
+    const newId = array[0].toString(16) + array[1].toString(16);
     localStorage.setItem("metrics_user_id", newId);
     return newId;
   }
